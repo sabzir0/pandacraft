@@ -55,7 +55,17 @@ class Hero:
 
 
     def tryMove(self, angle):
-        pass
+        new_pos = self.lookAt(angle)
+        if self.land.isEmpty(new_pos):
+            new_pos = self.land.findHighestEmpty(new_pos)
+            self.hero.setPos(new_pos)
+        else:
+            new_pos = new_pos[0], new_pos[1], new_pos[2]+1
+            if self.land.isEmpty(new_pos):
+                self.hero.setPos(new_pos)
+    
+    def changeMode(self):
+        self.spectatorMode = not self.spectatorMode
 
     def moveTo(self, angle):
         if self.spectatorMode:
@@ -107,6 +117,28 @@ class Hero:
         h = (self.hero.getH()+ 270) %360
         self.moveTo(h)
 
+    def up(self):
+        if self.spectatorMode:
+            z = self.hero.getZ()
+            self.hero.setZ(z+1)
+
+    def down(self):
+        if self.spectatorMode:
+            z = self.hero.getZ()
+            self.hero.setZ(z-1)
+
+    def build(self):
+        pos = self.lookAt(self.hero.getH() % 360 )
+        self.land.addBlock(pos)
+
+    def destory(self):
+        pos = self.lookAt(self.hero.getH() % 360 )
+        self.land.deleteBlock(pos)
+
+    def save(self):
+        self.land.saveToBin()
+    def load(self):
+        self.land.loadBin()
 
     def acceptEvents(self):
         builtins.base.accept(change_camera_key, self.changeCamera)
@@ -123,8 +155,14 @@ class Hero:
         builtins.base.accept(right_key, self.right)
         builtins.base.accept(right_key+"-repeat", self.right)
 
+        builtins.base.accept(change_mode_key, self.changeMode)
+        builtins.base.accept(move_up_key, self.up)
+        builtins.base.accept(move_down_key, self.down)        
+        builtins.base.accept(build_key, self.build)
+        builtins.base.accept(destory_key, self.destory)
 
-
+        builtins.base.accept(save_key, self.save)
+        builtins.base.accept(load_key, self.load)
 
 change_camera_key = "c" 
 turn_left_key = "arrow_left"
@@ -132,4 +170,13 @@ turn_right_key = "arrow_right"
 forward_key = "w"
 backward_key = "s"
 left_key = "a"
+change_mode_key = "z"
+move_up_key = "shift"
+move_down_key = "control"
 right_key = "d"
+build_key = "mouse3"
+destory_key = "mouse1"
+
+
+save_key = "f5"
+load_key = "f7"
