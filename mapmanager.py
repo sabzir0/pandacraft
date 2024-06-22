@@ -13,6 +13,15 @@ class MapManager():
             (0.9, 0.8, 0.7, 1),
         ]
 
+        self.textures = [
+            "block.png",
+            "block.png",
+            "stone.png",
+            "brick.png",
+            "brick.png",
+            "wood.png",
+        ]
+
         self.startNew()
         self.addBlock((0,10,0))
 
@@ -24,6 +33,11 @@ class MapManager():
         if z >= len(self.colors) - 1:
             return self.colors[-1]
         return self.colors[z]
+    
+    def getColor(self, z):
+        if z >= len(self.textures) - 1:
+            return self.textures[-1]
+        return self.textures[z]
     
 
     def addBlock(self, position):
